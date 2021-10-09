@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Steam Hunters Assistant
-// @version     1.0.12
+// @version     1.0.0
 // @author      Rudey
-// @description General-purpose userscript for Steam Hunters. Submit your ignored products on Steam to Steam Hunters.
+// @description General-purpose userscript for Steam Hunters.
 // @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
 // @supportURL  https://github.com/RudeySH/steam-hunters-assistant/issues
 // @match       https://store.steampowered.com/app/*
