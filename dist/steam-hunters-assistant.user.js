@@ -49,7 +49,7 @@ async function submitIgnoredAppIds() {
     const ignoredAppIds = Object.keys(userData.rgIgnoredApps).map(x => parseInt(x));
     await xmlHttpRequest({
         method: 'POST',
-        url: 'http://localhost:56663/steam-users/76561198044364065/update/ignored',
+        url: 'https://steamhunters.com/api/steam-users/76561198044364065/update/ignored',
         headers: {
             'Content-Type': 'application/json',
         },
