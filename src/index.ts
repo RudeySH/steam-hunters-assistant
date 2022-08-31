@@ -1,5 +1,5 @@
-﻿import { UserData } from "./interfaces/user-data";
-import { xmlHttpRequest } from "./utils/utils";
+﻿import { UserData } from './interfaces/user-data';
+import { xmlHttpRequest } from './utils/utils';
 
 const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
 

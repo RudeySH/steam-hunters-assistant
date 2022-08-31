@@ -30,8 +30,12 @@ var config = {
         match: [
           'https://store.steampowered.com/app/*',
         ],
+        license: 'AGPL-3.0-or-later',
+        icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
         namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
-        grant: 'GM.xmlHttpRequest',
+        grant: [
+          'GM.xmlHttpRequest',
+        ],
         connect: [
           'steamhunters.com',
         ],

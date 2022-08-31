@@ -1,12 +1,12 @@
 {
   "name": "steam-hunters-assistant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "General-purpose userscript for Steam Hunters.",
   "main": "dist/steam-hunters-assistant.js",
   "scripts": {
-    "eslint": "eslint .",
-    "webpack": "webpack",
-    "webpack-development": "webpack --mode development"
+    "build": "webpack",
+    "build-development": "webpack --mode development",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
