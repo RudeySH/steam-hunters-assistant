@@ -2,7 +2,7 @@
 General-purpose userscript for [Steam Hunters](https://steamhunters.com).
 
 ## Features
-- Automatically synchronizes owned apps with your Steam Hunters profile when you browse the Steam store.
+- Automatically synchronizes owned apps with your Steam Hunters profile when you go to any page on the Steam store (once per hour).
 - Automatically synchronizes ignored apps with your Steam Hunters profile when you click the Ignore button on a Steam store page.
 
 ## Instructions
@@ -14,7 +14,7 @@ General-purpose userscript for [Steam Hunters](https://steamhunters.com).
    - If you're using Violentmonkey, press the "Confirm installation" button on the top-right.
    - If you're using Tampermonkey, press the "Install" or "Reinstall" button on the top-left.
    - If you're using Greasemonkey, press the "Install" button on the bottom-left.
-3. Click the "Ignore" button on a product store page to synchronize ignored products with your Steam Hunters profile.
+3. Go to any page on the [Steam store](https://store.steampowered.com/) to automatically synchronize owned and ignored apps.
 
 To update the installed userscript to the latest version, simply do step 2 again.
 
