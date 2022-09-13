@@ -1,4 +1,4 @@
-export interface UserId {
+export interface IUserId {
     type: 'steamId' | 'vanityId';
     value: string;
 }

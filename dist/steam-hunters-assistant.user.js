@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Steam Hunters Assistant
-// @version     1.1.1
+// @version     1.2.0
 // @author      Rudey
 // @description General-purpose userscript for Steam Hunters.
 // @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
@@ -23,41 +23,54 @@
 /******/ 	"use strict";
 var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: ./src/utils/utils.ts
-async function getJSON(url, details) {
-    const data = await xmlHttpRequest({
-        method: 'GET',
-        overrideMimeType: 'application/json',
-        url,
-        ...details,
-    });
-    return JSON.parse(data.responseText);
-}
-async function postJSON(url, data) {
-    await xmlHttpRequest({
-        method: 'POST',
-        url,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(data),
-    });
-}
-function xmlHttpRequest(details) {
-    console.debug(`${details.method} ${details.url}`);
-    return new Promise((resolve, reject) => {
-        GM.xmlHttpRequest({
-            onabort: reject,
-            onerror: reject,
-            ontimeout: reject,
-            onload: resolve,
+;// CONCATENATED MODULE: ./src/classes/HttpService.ts
+class HttpService {
+    ensureSuccessStatusCode(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return;
+        }
+        throw `Response status code does not indicate success: ${response.status} (${response.statusText}).`;
+    }
+    async getJSON(url, details) {
+        const response = await this.xmlHttpRequest({
+            method: 'GET',
+            overrideMimeType: 'application/json',
+            url,
             ...details,
         });
-    });
+        this.ensureSuccessStatusCode(response);
+        return JSON.parse(response.responseText);
+    }
+    async postJSON(url, data) {
+        const response = await this.xmlHttpRequest({
+            method: 'POST',
+            url,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: JSON.stringify(data),
+        });
+        return response;
+    }
+    async xmlHttpRequest(details) {
+        console.debug(`${details.method} ${details.url}`);
+        const response = await new Promise((resolve, reject) => {
+            GM.xmlHttpRequest({
+                onabort: reject,
+                onerror: reject,
+                ontimeout: reject,
+                onload: resolve,
+                ...details,
+            });
+        });
+        console.info(`${details.method} ${details.url} ${response.status}`);
+        return response;
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/index.ts
 
+const httpService = new HttpService();
 window.addEventListener('DOMContentLoaded', () => {
     const userId = getUserId();
     if (userId === undefined) {
@@ -113,7 +126,7 @@ function getSteamStoreUserId() {
     }
 }
 async function runIfLastRunWasOverAnHourAgo(run) {
-    const key = 'lastRunDate_v1_1_1';
+    const key = 'lastRunDate_v1_2_0';
     const lastRunDateString = await GM.getValue(key);
     if (lastRunDateString !== undefined) {
         const lastRunDate = new Date(lastRunDateString);
@@ -121,25 +134,32 @@ async function runIfLastRunWasOverAnHourAgo(run) {
             return;
         }
     }
+    await run();
     await GM.setValue(key, new Date().toISOString());
-    run();
 }
 async function getUserData() {
-    return await getJSON('https://store.steampowered.com/dynamicstore/userdata/', {
+    var _a;
+    const userData = await httpService.getJSON('https://store.steampowered.com/dynamicstore/userdata/', {
         headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
         },
     });
+    if (!((_a = userData === null || userData === void 0 ? void 0 : userData.rgOwnedApps) === null || _a === void 0 ? void 0 : _a.length)) {
+        throw 'Unable to retrieve userdata. Are you signed in on store.steampowered.com?';
+    }
+    return userData;
 }
 async function submitOwnedAppIds(userId, userData) {
     const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
-    await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/owned`, userData.rgOwnedApps);
+    const response = await httpService.postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/owned`, userData.rgOwnedApps);
+    httpService.ensureSuccessStatusCode(response);
 }
 async function submitIgnoredAppIds(userId, userData) {
     const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
     const ignoredAppIds = Object.keys(userData.rgIgnoredApps).map(x => parseInt(x));
-    await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/ignored`, ignoredAppIds);
+    const response = await httpService.postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/ignored`, ignoredAppIds);
+    httpService.ensureSuccessStatusCode(response);
 }
 
 /******/ })()
