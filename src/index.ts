@@ -1,26 +1,86 @@
 ﻿import { UserData } from './interfaces/user-data';
+import { UserId } from './interfaces/user-id';
 import { getJSON, postJSON } from './utils/utils';
 
-runIfLastRunWasOverAnHourAgo(async () => {
-	const userData = await getUserData();
-	await submitOwnedAppIds(userData);
-	await submitIgnoredAppIds(userData);
+declare global {
+	interface Window {
+		app: { identity?: { steamId: string } };
+	}
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+	const userId = getUserId();
+
+	if (userId === undefined) {
+		return;
+	}
+
+	runIfLastRunWasOverAnHourAgo(async () => {
+		const userData = await getUserData();
+		await submitOwnedAppIds(userId, userData);
+		await submitIgnoredAppIds(userId, userData);
+	});
+
+	if (location.host === 'store.steampowered.com') {
+		const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
+
+		if (hiddenButton !== null) {
+			const observer = new MutationObserver(async () => {
+				const userData = await getUserData();
+				submitIgnoredAppIds(userId, userData);
+			});
+			observer.observe(hiddenButton, { attributeFilter: ['style'] });
+		}
+	}
 });
 
-if (location.host === 'store.steampowered.com') {
-	const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
+function getUserId() {
+	switch (location.host) {
+		case 'steamhunters.com':
+			return getSteamHuntersUserId();
 
-	if (hiddenButton !== null) {
-		const observer = new MutationObserver(async () => {
-			const userData = await getUserData();
-			submitIgnoredAppIds(userData);
-		});
-		observer.observe(hiddenButton, { attributeFilter: ['style'] });
+		case 'store.steampowered.com':
+			return getSteamStoreUserId();
+
+		default:
+			return undefined;
+	}
+}
+
+function getSteamHuntersUserId() {
+	if (unsafeWindow.app.identity === undefined) {
+		return undefined;
+	}
+
+	const value = unsafeWindow.app.identity.steamId;
+
+	return { value, type: 'steamId' } as UserId;
+}
+
+function getSteamStoreUserId() {
+	const avatarLink = document.querySelector<HTMLAnchorElement>(`
+		a[href^="https://steamcommunity.com/id/"],
+		a[href^="https://steamcommunity.com/profiles/"]`);
+
+	const avatarLinkParts = avatarLink?.href?.split('/') ?? [];
+
+	console.log(avatarLink);
+
+	switch (avatarLinkParts[3]) {
+		case 'id':
+			return { value: avatarLinkParts[4], type: 'vanityId' } as UserId;
+
+		case 'profiles':
+			return { value: avatarLinkParts[4], type: 'steamId' } as UserId;
+
+		default:
+			return undefined;
 	}
 }
 
 async function runIfLastRunWasOverAnHourAgo(run: () => void) {
-	const lastRunDateString = await GM.getValue<string>('lastRunDate');
+	const key = 'lastRunDate_v1_1_1';
+	const lastRunDateString = await GM.getValue<string>(key);
 
 	if (lastRunDateString !== undefined) {
 		const lastRunDate = new Date(lastRunDateString);
@@ -30,7 +90,7 @@ async function runIfLastRunWasOverAnHourAgo(run: () => void) {
 		}
 	}
 
-	await GM.setValue('lastRunDate', new Date().toISOString());
+	await GM.setValue(key, new Date().toISOString());
 
 	run();
 }
@@ -44,13 +104,16 @@ async function getUserData() {
 	});
 }
 
-async function submitOwnedAppIds(userData: UserData) {
-	await postJSON('https://steamhunters.com/api/steam-users/76561198044364065/update/owned', userData.rgOwnedApps);
+async function submitOwnedAppIds(userId: UserId, userData: UserData) {
+	const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
+
+	await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/owned`, userData.rgOwnedApps);
 }
 
-async function submitIgnoredAppIds(userData: UserData) {
+async function submitIgnoredAppIds(userId: UserId, userData: UserData) {
+	const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
+
 	const ignoredAppIds = Object.keys(userData.rgIgnoredApps).map(x => parseInt(x));
 
-	await postJSON('https://steamhunters.com/api/steam-users/76561198044364065/update/ignored', ignoredAppIds);
+	await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/ignored`, ignoredAppIds);
 }
-

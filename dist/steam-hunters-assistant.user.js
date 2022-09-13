@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Steam Hunters Assistant
-// @version     1.1.0
+// @version     1.1.1
 // @author      Rudey
 // @description General-purpose userscript for Steam Hunters.
 // @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
@@ -58,30 +58,70 @@ function xmlHttpRequest(details) {
 
 ;// CONCATENATED MODULE: ./src/index.ts
 
-runIfLastRunWasOverAnHourAgo(async () => {
-    const userData = await getUserData();
-    await submitOwnedAppIds(userData);
-    await submitIgnoredAppIds(userData);
+window.addEventListener('DOMContentLoaded', () => {
+    const userId = getUserId();
+    if (userId === undefined) {
+        return;
+    }
+    runIfLastRunWasOverAnHourAgo(async () => {
+        const userData = await getUserData();
+        await submitOwnedAppIds(userId, userData);
+        await submitIgnoredAppIds(userId, userData);
+    });
+    if (location.host === 'store.steampowered.com') {
+        const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
+        if (hiddenButton !== null) {
+            const observer = new MutationObserver(async () => {
+                const userData = await getUserData();
+                submitIgnoredAppIds(userId, userData);
+            });
+            observer.observe(hiddenButton, { attributeFilter: ['style'] });
+        }
+    }
 });
-if (location.host === 'store.steampowered.com') {
-    const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
-    if (hiddenButton !== null) {
-        const observer = new MutationObserver(async () => {
-            const userData = await getUserData();
-            submitIgnoredAppIds(userData);
-        });
-        observer.observe(hiddenButton, { attributeFilter: ['style'] });
+function getUserId() {
+    switch (location.host) {
+        case 'steamhunters.com':
+            return getSteamHuntersUserId();
+        case 'store.steampowered.com':
+            return getSteamStoreUserId();
+        default:
+            return undefined;
+    }
+}
+function getSteamHuntersUserId() {
+    if (unsafeWindow.app.identity === undefined) {
+        return undefined;
+    }
+    const value = unsafeWindow.app.identity.steamId;
+    return { value, type: 'steamId' };
+}
+function getSteamStoreUserId() {
+    var _a, _b;
+    const avatarLink = document.querySelector(`
+		a[href^="https://steamcommunity.com/id/"],
+		a[href^="https://steamcommunity.com/profiles/"]`);
+    const avatarLinkParts = (_b = (_a = avatarLink === null || avatarLink === void 0 ? void 0 : avatarLink.href) === null || _a === void 0 ? void 0 : _a.split('/')) !== null && _b !== void 0 ? _b : [];
+    console.log(avatarLink);
+    switch (avatarLinkParts[3]) {
+        case 'id':
+            return { value: avatarLinkParts[4], type: 'vanityId' };
+        case 'profiles':
+            return { value: avatarLinkParts[4], type: 'steamId' };
+        default:
+            return undefined;
     }
 }
 async function runIfLastRunWasOverAnHourAgo(run) {
-    const lastRunDateString = await GM.getValue('lastRunDate');
+    const key = 'lastRunDate_v1_1_1';
+    const lastRunDateString = await GM.getValue(key);
     if (lastRunDateString !== undefined) {
         const lastRunDate = new Date(lastRunDateString);
         if (new Date().getTime() - lastRunDate.getTime() < 3600000) {
             return;
         }
     }
-    await GM.setValue('lastRunDate', new Date().toISOString());
+    await GM.setValue(key, new Date().toISOString());
     run();
 }
 async function getUserData() {
@@ -92,12 +132,14 @@ async function getUserData() {
         },
     });
 }
-async function submitOwnedAppIds(userData) {
-    await postJSON('https://steamhunters.com/api/steam-users/76561198044364065/update/owned', userData.rgOwnedApps);
+async function submitOwnedAppIds(userId, userData) {
+    const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
+    await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/owned`, userData.rgOwnedApps);
 }
-async function submitIgnoredAppIds(userData) {
+async function submitIgnoredAppIds(userId, userData) {
+    const userIdPath = userId.type === 'steamId' ? userId.value : `id/${userId.value}`;
     const ignoredAppIds = Object.keys(userData.rgIgnoredApps).map(x => parseInt(x));
-    await postJSON('https://steamhunters.com/api/steam-users/76561198044364065/update/ignored', ignoredAppIds);
+    await postJSON(`https://steamhunters.com/api/steam-users/${userIdPath}/update/ignored`, ignoredAppIds);
 }
 
 /******/ })()
