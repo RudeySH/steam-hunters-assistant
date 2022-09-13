@@ -28,16 +28,20 @@ var config = {
       headers: {
         name: 'Steam Hunters Assistant',
         match: [
-          'https://store.steampowered.com/app/*',
+          'https://steamhunters.com/*',
+          'https://store.steampowered.com/*',
         ],
         license: 'AGPL-3.0-or-later',
         icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
         namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
         grant: [
+          'GM.getValue',
+          'GM.setValue',
           'GM.xmlHttpRequest',
         ],
         connect: [
           'steamhunters.com',
+          'store.steampowered.com',
         ],
       },
       downloadBaseUrl: 'https://github.com/RudeySH/steam-hunters-assistant/raw/main/dist/',

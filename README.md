@@ -2,7 +2,8 @@
 General-purpose userscript for [Steam Hunters](https://steamhunters.com).
 
 ## Features
-- Automatically synchronizes ignored products with your Steam Hunters profile when you click the Ignore button on a product store page.
+- Automatically synchronizes owned apps with your Steam Hunters profile when you browse the Steam store.
+- Automatically synchronizes ignored apps with your Steam Hunters profile when you click the Ignore button on a Steam store page.
 
 ## Instructions
 1. Install a userscript manager:
