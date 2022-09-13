@@ -10,10 +10,11 @@ declare global {
 
 const httpService = new HttpService();
 
-window.addEventListener('DOMContentLoaded', () => {
+ensureDOMContentLoaded().then(() => {
 	const userId = getUserId();
 
 	if (userId === undefined) {
+		console.log('User ID not found. Are you signed in?');
 		return;
 	}
 
@@ -35,6 +36,22 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 });
+
+function ensureDOMContentLoaded() {
+	return new Promise<void>(resolve => {
+		if (document.readyState === 'interactive' || document.readyState === 'complete') {
+			resolve();
+			return;
+		}
+
+		document.addEventListener('readystatechange', function listener() {
+			if (document.readyState === 'interactive' || document.readyState === 'complete') {
+				document.removeEventListener('readystatechange', listener);
+				resolve();
+			}
+		});
+	});
+}
 
 function getUserId() {
 	switch (location.host) {
@@ -81,7 +98,7 @@ function getSteamStoreUserId() {
 }
 
 async function runIfLastRunWasOverAnHourAgo(run: () => Promise<unknown>) {
-	const key = 'lastRunDate_v1_2_0';
+	const key = 'lastRunDate_v1_2_1';
 	const lastRunDateString = await GM.getValue<string>(key);
 
 	if (lastRunDateString !== undefined) {

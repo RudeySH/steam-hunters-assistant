@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Steam Hunters Assistant
-// @version     1.2.0
+// @version     1.2.1
 // @author      Rudey
 // @description General-purpose userscript for Steam Hunters.
 // @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
@@ -71,9 +71,10 @@ class HttpService {
 ;// CONCATENATED MODULE: ./src/index.ts
 
 const httpService = new HttpService();
-window.addEventListener('DOMContentLoaded', () => {
+ensureDOMContentLoaded().then(() => {
     const userId = getUserId();
     if (userId === undefined) {
+        console.log('User ID not found. Are you signed in?');
         return;
     }
     runIfLastRunWasOverAnHourAgo(async () => {
@@ -92,6 +93,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+function ensureDOMContentLoaded() {
+    return new Promise(resolve => {
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            resolve();
+            return;
+        }
+        document.addEventListener('readystatechange', function listener() {
+            if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                document.removeEventListener('readystatechange', listener);
+                resolve();
+            }
+        });
+    });
+}
 function getUserId() {
     switch (location.host) {
         case 'steamhunters.com':
@@ -126,7 +141,7 @@ function getSteamStoreUserId() {
     }
 }
 async function runIfLastRunWasOverAnHourAgo(run) {
-    const key = 'lastRunDate_v1_2_0';
+    const key = 'lastRunDate_v1_2_1';
     const lastRunDateString = await GM.getValue(key);
     if (lastRunDateString !== undefined) {
         const lastRunDate = new Date(lastRunDateString);

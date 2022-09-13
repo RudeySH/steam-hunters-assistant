@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Steam Hunters Assistant
-// @version     1.2.0
+// @version     1.2.1
 // @author      Rudey
 // @description General-purpose userscript for Steam Hunters.
 // @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
