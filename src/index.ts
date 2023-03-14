@@ -8,6 +8,7 @@ declare global {
 	}
 }
 
+const versionKey = 'v1_2_2';
 const httpService = new HttpService();
 
 ensureDOMContentLoaded().then(() => {
@@ -98,10 +99,10 @@ function getSteamStoreUserId() {
 }
 
 async function runIfLastRunWasOverAnHourAgo(run: () => Promise<unknown>) {
-	const key = 'lastRunDate_v1_2_1';
-	const lastRunDateString = await GM.getValue<string>(key);
+	const key = `lastRunDate_${versionKey}`;
+	const lastRunDateString = await GM.getValue(key, '');
 
-	if (lastRunDateString !== undefined) {
+	if (lastRunDateString) {
 		const lastRunDate = new Date(lastRunDateString);
 
 		if (new Date().getTime() - lastRunDate.getTime() < 3600000) {

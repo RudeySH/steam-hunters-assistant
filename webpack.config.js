@@ -1,5 +1,5 @@
 const path = require('path');
-const WebpackUserscript = require('webpack-userscript');
+const { UserscriptPlugin } = require('webpack-userscript');
 
 var config = {
   entry: './src/index.ts',
@@ -20,31 +20,30 @@ var config = {
     minimize: false,
   },
   output: {
-    filename: 'steam-hunters-assistant.user.js',
+    filename: 'steam-hunters-assistant.js',
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
-    new WebpackUserscript({
+    new UserscriptPlugin({
       headers: {
         name: 'Steam Hunters Assistant',
         match: [
           'https://steamhunters.com/*',
           'https://store.steampowered.com/*',
         ],
-        license: 'AGPL-3.0-or-later',
-        icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
-        namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
+        connect: [
+          'steamhunters.com',
+          'store.steampowered.com',
+        ],
         grant: [
           'GM.getValue',
           'GM.setValue',
           'GM.xmlHttpRequest',
         ],
-        connect: [
-          'steamhunters.com',
-          'store.steampowered.com',
-        ],
+        icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
+        namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
       },
-      downloadBaseUrl: 'https://github.com/RudeySH/steam-hunters-assistant/raw/main/dist/',
+      downloadBaseUrl: 'https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/',
     }),
   ],
 };

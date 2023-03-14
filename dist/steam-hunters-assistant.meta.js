@@ -1,20 +1,17 @@
 // ==UserScript==
-// @name        Steam Hunters Assistant
-// @version     1.2.1
-// @author      Rudey
+// @name Steam Hunters Assistant
 // @description General-purpose userscript for Steam Hunters.
-// @homepage    https://github.com/RudeySH/steam-hunters-assistant#readme
-// @supportURL  https://github.com/RudeySH/steam-hunters-assistant/issues
-// @match       https://steamhunters.com/*
-// @match       https://store.steampowered.com/*
-// @license     AGPL-3.0-or-later
-// @icon        https://steamhunters.com/content/img/steam_hunters.svg
-// @namespace   https://github.com/RudeySH/steam-hunters-assistant
-// @grant       GM.getValue
-// @grant       GM.setValue
-// @grant       GM.xmlHttpRequest
-// @connect     steamhunters.com
-// @connect     store.steampowered.com
-// @downloadURL https://github.com/RudeySH/steam-hunters-assistant/raw/main/dist/steam-hunters-assistant.user.js
-// @updateURL   https://github.com/RudeySH/steam-hunters-assistant/raw/main/dist/steam-hunters-assistant.meta.js
+// @version 1.2.2
+// @author Rudey
+// @homepage https://github.com/RudeySH/steam-hunters-assistant#readme
+// @supportURL https://github.com/RudeySH/steam-hunters-assistant/issues
+// @match https://steamhunters.com/*
+// @match https://store.steampowered.com/*
+// @connect steamhunters.com
+// @connect store.steampowered.com
+// @grant GM.getValue
+// @grant GM.setValue
+// @grant GM.xmlHttpRequest
+// @icon https://steamhunters.com/content/img/steam_hunters.svg
+// @namespace https://github.com/RudeySH/steam-hunters-assistant
 // ==/UserScript==

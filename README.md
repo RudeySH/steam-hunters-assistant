@@ -7,12 +7,12 @@ General-purpose userscript for [Steam Hunters](https://steamhunters.com).
 
 ## Instructions
 1. Install a userscript manager:
-   - [Violentmonkey](https://violentmonkey.github.io/) (recommended).
-   - [Tampermonkey](https://tampermonkey.net/) (supports more browsers).
    - [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) (open source, Firefox-only).
-2. Install this userscript: [Steam Hunters Assistant](https://github.com/RudeySH/steam-hunters-assistant/raw/main/dist/steam-hunters-assistant.user.js).
-   - If you're using Violentmonkey, press the "Confirm installation" button on the top-right.
-   - If you're using Tampermonkey, press the "Install" or "Reinstall" button on the top-left.
+   - [Violentmonkey](https://violentmonkey.github.io/) (open source, supports more browsers).
+   - [Tampermonkey](https://tampermonkey.net/) (closed source, supports even more browsers).
+2. Install this userscript: [Steam Hunters Assistant](https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/steam-hunters-assistant.user.js).
+   - If you're using Violentmonkey, press the "Confirm installation" button on the left.
+   - If you're using Tampermonkey, press the "Install" button on the top-left.
    - If you're using Greasemonkey, press the "Install" button on the bottom-left.
 3. Go to any page on the [Steam store](https://store.steampowered.com/) to automatically synchronize owned and ignored apps.
 
