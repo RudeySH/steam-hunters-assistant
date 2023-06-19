@@ -8,7 +8,7 @@ declare global {
 	}
 }
 
-const versionKey = 'v1_2_2';
+const versionKey = 'v1_2_3';
 const httpService = new HttpService();
 
 ensureDOMContentLoaded().then(() => {
@@ -83,8 +83,6 @@ function getSteamStoreUserId() {
 		a[href^="https://steamcommunity.com/profiles/"]`);
 
 	const avatarLinkParts = avatarLink?.href?.split('/') ?? [];
-
-	console.log(avatarLink);
 
 	switch (avatarLinkParts[3]) {
 		case 'id':

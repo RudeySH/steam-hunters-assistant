@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Steam Hunters Assistant
 // @description General-purpose userscript for Steam Hunters.
-// @version 1.2.2
+// @version 1.2.3
 // @author Rudey
 // @homepage https://github.com/RudeySH/steam-hunters-assistant#readme
 // @supportURL https://github.com/RudeySH/steam-hunters-assistant/issues
@@ -67,7 +67,7 @@ class HttpService {
 
 ;// CONCATENATED MODULE: ./src/index.ts
 
-const versionKey = 'v1_2_2';
+const versionKey = 'v1_2_3';
 const httpService = new HttpService();
 ensureDOMContentLoaded().then(() => {
     const userId = getUserId();
@@ -128,7 +128,6 @@ function getSteamStoreUserId() {
 		a[href^="https://steamcommunity.com/id/"],
 		a[href^="https://steamcommunity.com/profiles/"]`);
     const avatarLinkParts = (_b = (_a = avatarLink === null || avatarLink === void 0 ? void 0 : avatarLink.href) === null || _a === void 0 ? void 0 : _a.split('/')) !== null && _b !== void 0 ? _b : [];
-    console.log(avatarLink);
     switch (avatarLinkParts[3]) {
         case 'id':
             return { value: avatarLinkParts[4], type: 'vanityId' };
