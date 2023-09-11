@@ -41,6 +41,7 @@ var config = {
           'GM.xmlHttpRequest',
         ],
         icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
+        license: 'AGPL-3.0-or-later',
         namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
       },
       downloadBaseURL: 'https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/',
