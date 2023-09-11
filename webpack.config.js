@@ -43,7 +43,7 @@ var config = {
         icon: 'https://steamhunters.com/content/img/steam_hunters.svg',
         namespace: 'https://github.com/RudeySH/steam-hunters-assistant',
       },
-      downloadBaseUrl: 'https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/',
+      downloadBaseURL: 'https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/',
     }),
   ],
 };
