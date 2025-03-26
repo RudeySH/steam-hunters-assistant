@@ -3,7 +3,7 @@ import { IUserData } from './interfaces/IUserData';
 
 declare global {
 	interface Window {
-		app?: { identity?: { steamId: string } };
+		sh?: { identity?: { steamId: string } };
 		g_AccountID?: number;
 	}
 }
@@ -57,7 +57,7 @@ function ensureDOMContentLoaded() {
 function getSteamId() {
 	switch (location.host) {
 		case 'steamhunters.com':
-			return unsafeWindow.app?.identity?.steamId;
+			return unsafeWindow.sh?.identity?.steamId;
 
 		case 'store.steampowered.com':
 			if (unsafeWindow.g_AccountID === undefined) {
