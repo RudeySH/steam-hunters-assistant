@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name Steam Hunters Assistant
 // @description General-purpose userscript for Steam Hunters.
-// @version 1.3.3
+// @version 1.3.4
 // @author Rudey
 // @homepage https://github.com/RudeySH/steam-hunters-assistant#readme
 // @supportURL https://github.com/RudeySH/steam-hunters-assistant/issues
-// @match https://steamhunters.com/*
 // @match https://store.steampowered.com/*
-// @connect steamhunters.com
 // @connect store.steampowered.com
 // @downloadURL https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/steam-hunters-assistant.user.js
 // @grant GM.getValue
@@ -78,12 +76,12 @@ ensureDOMContentLoaded().then(() => {
         console.log('Steam ID not found. Are you signed in?');
         return;
     }
-    runIfLastRunWasOverAnHourAgo(async () => {
-        const userData = await getUserData();
-        await submitOwnedAppIds(steamId, userData);
-        await submitIgnoredAppIds(steamId, userData);
-    });
     if (location.host === 'store.steampowered.com') {
+        runIfLastRunWasOverAnHourAgo(async () => {
+            const userData = await getUserData();
+            await submitOwnedAppIds(steamId, userData);
+            await submitIgnoredAppIds(steamId, userData);
+        });
         const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
         if (hiddenButton !== null) {
             const observer = new MutationObserver(async () => {
@@ -110,8 +108,6 @@ function ensureDOMContentLoaded() {
 }
 function getSteamId() {
     switch (location.host) {
-        case 'steamhunters.com':
-            return unsafeWindow.sh?.identity?.steamId;
         case 'store.steampowered.com':
             if (unsafeWindow.g_AccountID === undefined) {
                 return undefined;

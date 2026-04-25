@@ -28,11 +28,9 @@ var config = {
       headers: {
         name: 'Steam Hunters Assistant',
         match: [
-          'https://steamhunters.com/*',
           'https://store.steampowered.com/*',
         ],
         connect: [
-          'steamhunters.com',
           'store.steampowered.com',
         ],
         grant: [

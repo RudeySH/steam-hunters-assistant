@@ -3,7 +3,6 @@ import { IUserData } from './interfaces/IUserData';
 
 declare global {
 	interface Window {
-		sh?: { identity?: { steamId: string } };
 		g_AccountID?: number;
 	}
 }
@@ -19,13 +18,13 @@ ensureDOMContentLoaded().then(() => {
 		return;
 	}
 
-	runIfLastRunWasOverAnHourAgo(async () => {
-		const userData = await getUserData();
-		await submitOwnedAppIds(steamId, userData);
-		await submitIgnoredAppIds(steamId, userData);
-	});
-
 	if (location.host === 'store.steampowered.com') {
+		runIfLastRunWasOverAnHourAgo(async () => {
+			const userData = await getUserData();
+			await submitOwnedAppIds(steamId, userData);
+			await submitIgnoredAppIds(steamId, userData);
+		});
+
 		const hiddenButton = document.querySelector('#ignoreBtn [style="display: none;"]');
 
 		if (hiddenButton !== null) {
@@ -56,9 +55,6 @@ function ensureDOMContentLoaded() {
 
 function getSteamId() {
 	switch (location.host) {
-		case 'steamhunters.com':
-			return unsafeWindow.sh?.identity?.steamId;
-
 		case 'store.steampowered.com':
 			if (unsafeWindow.g_AccountID === undefined) {
 				return undefined;
