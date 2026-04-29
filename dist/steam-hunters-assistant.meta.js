@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name Steam Hunters Assistant
 // @description General-purpose userscript for Steam Hunters.
-// @version 1.3.4
+// @version 1.3.5
 // @author Rudey
 // @homepage https://github.com/RudeySH/steam-hunters-assistant#readme
 // @supportURL https://github.com/RudeySH/steam-hunters-assistant/issues
 // @match https://store.steampowered.com/*
+// @connect steamhunters.com
 // @connect store.steampowered.com
 // @downloadURL https://raw.githubusercontent.com/RudeySH/steam-hunters-assistant/main/dist/steam-hunters-assistant.user.js
 // @grant GM.getValue

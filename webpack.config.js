@@ -31,6 +31,7 @@ var config = {
           'https://store.steampowered.com/*',
         ],
         connect: [
+          'steamhunters.com',
           'store.steampowered.com',
         ],
         grant: [
